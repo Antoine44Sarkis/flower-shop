@@ -1,10 +1,6 @@
 "use client";
 import Link from "next/link";
 import React, { useState } from "react";
-import { storage } from "../lib/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
-import Image from "next/image";
 
 const Formes = () => {
   const [name, setName] = useState("");
@@ -25,41 +21,36 @@ const Formes = () => {
       alert("please fill all informations");
       return;
     }
-    if (password !== "floremihasroun") {
-      alert("Incorrect password");
-      return;
-    }
+    if (password === "flowershop") {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("about", about);
+      formData.append("image", image);
 
-    try {
-      // Upload image to Firebase Storage
-      const imageRef = ref(storage, `products/${uuidv4()}_${image.name}`);
-      await uploadBytes(imageRef, image);
-      const imageUrl = await getDownloadURL(imageRef);
+      try {
+        const res = await fetch("/api/products", {
+          method: "POST",
+          body: formData,
+        });
 
-      // Send product data to backend
-      const res = await fetch("/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, about, imageUrl }),
-      });
+        const data = await res.json();
 
-      const data = await res.json();
-
-      if (res.ok) {
-        alert("Product added successfully!");
-        setName("");
-        setAbout("");
-        setImage(null);
-        setPreview(null);
-        setPassword("");
-      } else {
-        alert("Error: " + data.message);
+        if (res.ok) {
+          alert("Product added successfully!");
+          setName("");
+          setAbout("");
+          setImage(null);
+          setPreview(null);
+          setPassword("");
+        } else {
+          alert("Error: " + data.message);
+        }
+      } catch (err) {
+        console.error("Error submitting product:", err);
+        alert("Something went wrong");
       }
-    } catch (err) {
-      console.error("Upload failed", err);
-      alert("Something went wrong");
+    } else {
+      alert("Incorrect password");
     }
   };
   return (
@@ -120,14 +111,11 @@ const Formes = () => {
             className="mt-1 block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-sm file:font-semibold hover:file:bg-gray-100"
           />
           {preview && (
-            <div className="mt-2 h-40 relative rounded border border-gray-300">
-              <Image
-                src={preview}
-                alt="Preview"
-                fill
-                className="object-cover rounded"
-              />
-            </div>
+            <img
+              src={preview}
+              alt="Preview"
+              className="mt-2 h-40 object-cover rounded border border-gray-300"
+            />
           )}
         </div>
 

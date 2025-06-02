@@ -7,7 +7,7 @@ export default function Home() {
         className="bg-green-300 text-center font-extrabold text-3xl py-1
         "
       >
-        Floremi Shop
+        Flower Shop
       </header>
       <div className="flex justify-between px-5 bg-emerald-200">
         <a>Home</a>
