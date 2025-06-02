@@ -120,11 +120,14 @@ const Formes = () => {
             className="mt-1 block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-md file:bg-gray-50 file:text-sm file:font-semibold hover:file:bg-gray-100"
           />
           {preview && (
-            <Image
-              src={preview}
-              alt="Preview"
-              className="mt-2 h-40 object-cover rounded border border-gray-300"
-            />
+            <div className="mt-2 h-40 relative rounded border border-gray-300">
+              <Image
+                src={preview}
+                alt="Preview"
+                fill
+                className="object-cover rounded"
+              />
+            </div>
           )}
         </div>
 

@@ -7,10 +7,10 @@ export async function GET() {
     const db = client.db("floremi");
     const products = await db.collection("products").find({}).toArray();
 
-    return NextResponse.json(products);
+    return NextResponse.json(products || []);
   } catch (error) {
     console.error("failed to fetch products", error);
-    return NextResponse.json({ message: "failed to fetch" });
+    return NextResponse.json([]);
   }
 }
 
